@@ -12,8 +12,17 @@
     - name : push docker image
       command : docker push janescience/discovery-service:latest
 
+    - name : stop docker container
+      command : docker stop discovery-service
+      ignore_errors: yes
+
+    - name : remove docker container
+      command : docker rm discovery-service
+      ignore_errors: yes
+
     - name : run docker image
       command : docker run -d --name discovery-service -p 9001:9001 janescience/discovery-service:latest
 
-    - name : delete docker image not use
-      command : docker images|sed "1 d"|grep |awk '{print $3}'|sort|uniq|xargs docker rmi
+    - name: Remove images with the tag "none"
+      command: docker rmi -f $(docker images -f "dangling=true" -q)
+      ignore_errors: yes
