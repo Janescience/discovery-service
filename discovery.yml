@@ -1,0 +1,16 @@
+---
+- hosts : ansible
+  tasks :
+    - name : create docker image
+      command : docker build -t discovery-service:latest .
+      args : 
+        chdir: /opt/docker/discovery-service
+    
+    - name : create tag to push image into dockerhub
+      command : docker tag discovery-service:latest janescience/discovery-service:latest
+
+    - name : push docker image
+      command : docker push janescience/discovery-service:latest
+
+    - name : run docker image
+      command : docker run -d --name discovery-service -p 9001:9001 janescience/discovery-service:latest
